@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
     "KASH transforms real-world gold reserves into a stable digital financial infrastructure through tokenization and DeFi integration.",
 
   // Navigation Links
-  WHITEPAPER_URL: "/kash-whitepaper.pdf", // Change this to your actual whitepaper URL
+  WHITEPAPER_URL: "https://docs.kash-rwa.io", // Change this to your actual whitepaper URL
   LAUNCH_APP_URL: "", // Leave empty to show "Coming Soon" - Change to your actual app URL when ready
 
   // Contact Information
