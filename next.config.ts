@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  basePath: '/KOR-Ryat',
-  assetPrefix: '/kash-client/',
-
   trailingSlash: true,
 };
 
