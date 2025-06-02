@@ -29,7 +29,7 @@ import Image from "next/image"
 
 // ===== CONFIGURATION SECTION - EASY TO MODIFY =====
 const NAVIGATION_LINKS = {
-  WHITEPAPER_URL: "/whitepaper.pdf", // Change this to your actual whitepaper URL
+  WHITEPAPER_URL: "https://docs.kash-rwa.io", // Change this to your actual whitepaper URL
   LAUNCH_APP_URL: "https://app.defichain.com", // Change this to your actual app URL
 }
 
