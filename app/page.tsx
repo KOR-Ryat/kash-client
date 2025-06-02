@@ -1,103 +1,517 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  X,
+  ExternalLink,
+  FileText,
+  Mail,
+  Rocket,
+  Globe,
+  Twitter,
+  Github,
+  Linkedin,
+} from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+
+export default function BlockchainWebsite() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [currentNewsIndex, setCurrentNewsIndex] = useState(0)
+  const [isConstructionMode, setIsConstructionMode] = useState(false)
+
+  // Sample news articles - Replace with your actual news
+  const newsArticles = [
+    {
+      title: "DeFiChain Secures $25M in Series B Funding",
+      source: "CoinTelegraph",
+      date: "Jan 15, 2025",
+      image: "/placeholder.svg?height=200&width=300",
+      excerpt:
+        "Revolutionary DeFi protocol raises significant funding to expand cross-chain capabilities and enhance user security features.",
+      link: "https://example.com/news1",
+    },
+    {
+      title: "Major Exchange Integration Announced",
+      source: "The Block",
+      date: "Jan 10, 2025",
+      image: "/placeholder.svg?height=200&width=300",
+      excerpt:
+        "Leading cryptocurrency exchange partners with DeFiChain to provide seamless trading and staking opportunities for users.",
+      link: "https://example.com/news2",
+    },
+    {
+      title: "Smart Contract Audit Completed Successfully",
+      source: "Decrypt",
+      date: "Jan 5, 2025",
+      image: "/placeholder.svg?height=200&width=300",
+      excerpt:
+        "Top-tier security firm completes comprehensive audit, confirming protocol security and readiness for mainnet launch.",
+      link: "https://example.com/news3",
+    },
+  ]
+
+  // Team members - Replace with your actual team
+  const teamMembers = [
+    {
+      name: "Dr. Sarah Chen",
+      role: "CEO & Co-Founder",
+      image: "/placeholder.svg?height=150&width=150",
+      bio: "Former Ethereum Foundation researcher with PhD in Cryptography from Stanford. Led development of multiple DeFi protocols.",
+      linkedin: "https://linkedin.com/in/sarahchen",
+      twitter: "https://twitter.com/sarahchen",
+    },
+    {
+      name: "Marcus Rodriguez",
+      role: "CTO & Co-Founder",
+      image: "/placeholder.svg?height=150&width=150",
+      bio: "Ex-Coinbase Principal Engineer with 8+ years building scalable blockchain infrastructure and smart contract systems.",
+      linkedin: "https://linkedin.com/in/marcusrodriguez",
+      twitter: "https://twitter.com/marcusrodriguez",
+    },
+    {
+      name: "Dr. James Liu",
+      role: "Head of Research",
+      image: "/placeholder.svg?height=150&width=150",
+      bio: "PhD in Computer Science from MIT. Published 20+ papers on consensus mechanisms and zero-knowledge proofs.",
+      linkedin: "https://linkedin.com/in/jamesliu",
+      twitter: "https://twitter.com/jamesliu",
+    },
+    {
+      name: "Elena Petrov",
+      role: "Head of Product",
+      image: "/placeholder.svg?height=150&width=150",
+      bio: "Former Product Lead at Uniswap. Expert in DeFi UX design and protocol tokenomics with 6+ years experience.",
+      linkedin: "https://linkedin.com/in/elenapetrov",
+      twitter: "https://twitter.com/elenapetrov",
+    },
+  ]
+
+  // Partners - Replace with your actual partners
+  const partners = [
+    { name: "Chainlink", logo: "/placeholder.svg?height=80&width=120", url: "https://chain.link" },
+    { name: "Polygon", logo: "/placeholder.svg?height=80&width=120", url: "https://polygon.technology" },
+    { name: "The Graph", logo: "/placeholder.svg?height=80&width=120", url: "https://thegraph.com" },
+    { name: "OpenZeppelin", logo: "/placeholder.svg?height=80&width=120", url: "https://openzeppelin.com" },
+    { name: "Consensys", logo: "/placeholder.svg?height=80&width=120", url: "https://consensys.net" },
+    { name: "Alchemy", logo: "/placeholder.svg?height=80&width=120", url: "https://alchemy.com" },
+  ]
+
+  // Construction mode redirect
+  useEffect(() => {
+    if (isConstructionMode) {
+      window.open("/whitepaper.pdf", "_blank")
+    }
+  }, [isConstructionMode])
+
+  // Auto-advance news carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentNewsIndex((prev) => (prev + 1) % newsArticles.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [newsArticles.length])
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" })
+    setIsMenuOpen(false)
+  }
+
+  const nextNews = () => {
+    setCurrentNewsIndex((prev) => (prev + 1) % newsArticles.length)
+  }
+
+  const prevNews = () => {
+    setCurrentNewsIndex((prev) => (prev - 1 + newsArticles.length) % newsArticles.length)
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      {/* Construction Mode Banner */}
+      {isConstructionMode && (
+        <div className="bg-yellow-600 text-black p-2 text-center">
+          <span className="font-semibold">🚧 Site under construction - Redirecting to whitepaper...</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      )}
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">DC</span>
+              </div>
+              <span className="text-xl font-bold">DeFiChain</span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <button onClick={() => scrollToSection("hero")} className="hover:text-blue-400 transition-colors">
+                Home
+              </button>
+              <button onClick={() => scrollToSection("media")} className="hover:text-blue-400 transition-colors">
+                Media
+              </button>
+              <button onClick={() => scrollToSection("team")} className="hover:text-blue-400 transition-colors">
+                Team
+              </button>
+              <button onClick={() => scrollToSection("partners")} className="hover:text-blue-400 transition-colors">
+                Partners
+              </button>
+              <button onClick={() => scrollToSection("contact")} className="hover:text-blue-400 transition-colors">
+                Contact
+              </button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsConstructionMode(true)}
+                className="border-slate-600 text-white hover:bg-slate-800"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Whitepaper
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => setIsConstructionMode(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              >
+                <Rocket className="w-4 h-4 mr-2" />
+                Launch App
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden bg-slate-800 border-t border-slate-700">
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                <button onClick={() => scrollToSection("hero")} className="block px-3 py-2 hover:bg-slate-700 rounded">
+                  Home
+                </button>
+                <button onClick={() => scrollToSection("media")} className="block px-3 py-2 hover:bg-slate-700 rounded">
+                  Media
+                </button>
+                <button onClick={() => scrollToSection("team")} className="block px-3 py-2 hover:bg-slate-700 rounded">
+                  Team
+                </button>
+                <button
+                  onClick={() => scrollToSection("partners")}
+                  className="block px-3 py-2 hover:bg-slate-700 rounded"
+                >
+                  Partners
+                </button>
+                <button
+                  onClick={() => scrollToSection("contact")}
+                  className="block px-3 py-2 hover:bg-slate-700 rounded"
+                >
+                  Contact
+                </button>
+                <div className="pt-2 space-y-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsConstructionMode(true)}
+                    className="w-full border-slate-600 text-white hover:bg-slate-800"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Whitepaper
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setIsConstructionMode(true)}
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                  >
+                    <Rocket className="w-4 h-4 mr-2" />
+                    Launch App
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="hero" className="pt-16 min-h-screen flex items-center">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto">
+            <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-500/30">
+              Next-Generation DeFi Platform
+            </Badge>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              DeFiChain
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
+              The next-generation cross-chain DeFi protocol enabling seamless asset transfers and yield optimization
+              across multiple blockchains
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                onClick={() => setIsConstructionMode(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-lg px-8 py-3"
+              >
+                <Rocket className="w-5 h-5 mr-2" />
+                Launch Platform
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => scrollToSection("media")}
+                className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-3"
+              >
+                Learn More
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Media Section */}
+      <section id="media" className="py-20 bg-slate-800/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">In the News</h2>
+            <p className="text-slate-300 text-lg">Latest coverage and updates from leading media outlets</p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <Card className="bg-slate-800 border-slate-700">
+              <CardContent className="p-0">
+                <div className="md:flex">
+                  <div className="md:w-1/3">
+                    <Image
+                      src={newsArticles[currentNewsIndex].image || "/placeholder.svg"}
+                      alt={newsArticles[currentNewsIndex].title}
+                      width={300}
+                      height={200}
+                      className="w-full h-48 md:h-full object-cover rounded-l-lg"
+                    />
+                  </div>
+                  <div className="md:w-2/3 p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+                        {newsArticles[currentNewsIndex].source}
+                      </Badge>
+                      <span className="text-slate-400 text-sm">{newsArticles[currentNewsIndex].date}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3 text-white">{newsArticles[currentNewsIndex].title}</h3>
+                    <p className="text-slate-300 mb-4">{newsArticles[currentNewsIndex].excerpt}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-slate-600 text-white hover:bg-slate-700"
+                      onClick={() => window.open(newsArticles[currentNewsIndex].link, "_blank")}
+                    >
+                      Read Full Article
+                      <ExternalLink className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Carousel Controls */}
+            <button
+              onClick={prevNews}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-slate-700 hover:bg-slate-600 rounded-full p-2 transition-colors"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={nextNews}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-slate-700 hover:bg-slate-600 rounded-full p-2 transition-colors"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center mt-6 space-x-2">
+              {newsArticles.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentNewsIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    index === currentNewsIndex ? "bg-blue-500" : "bg-slate-600"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section id="team" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Meet Our Team</h2>
+            <p className="text-slate-300 text-lg">Experienced leaders driving blockchain innovation</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
+              <Card key={index} className="bg-slate-800 border-slate-700 hover:border-blue-500/50 transition-colors">
+                <CardContent className="p-6 text-center">
+                  <Image
+                    src={member.image || "/placeholder.svg"}
+                    alt={member.name}
+                    width={150}
+                    height={150}
+                    className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                  />
+                  <h3 className="text-xl font-semibold mb-2 text-white">{member.name}</h3>
+                  <p className="text-blue-400 mb-3">{member.role}</p>
+                  <p className="text-slate-300 text-sm mb-4">{member.bio}</p>
+                  <div className="flex justify-center space-x-2">
+                    {member.linkedin && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => window.open(member.linkedin, "_blank")}
+                        className="text-slate-400 hover:text-blue-400"
+                      >
+                        <Linkedin className="w-4 h-4" />
+                      </Button>
+                    )}
+                    {member.twitter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => window.open(member.twitter, "_blank")}
+                        className="text-slate-400 hover:text-blue-400"
+                      >
+                        <Twitter className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Section */}
+      <section id="partners" className="py-20 bg-slate-800/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Our Partners</h2>
+            <p className="text-slate-300 text-lg">Trusted by leading organizations in the blockchain ecosystem</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+            {partners.map((partner, index) => (
+              <div key={index} className="flex justify-center">
+                <a href={partner.url} target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src={partner.logo || "/placeholder.svg"}
+                    alt={partner.name}
+                    width={120}
+                    height={80}
+                    className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity filter grayscale hover:grayscale-0"
+                  />
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="contact" className="bg-slate-900 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg"></div>
+                <span className="text-xl font-bold">DeFiChain</span>
+              </div>
+              <p className="text-slate-300 mb-4">
+                Building the future of decentralized finance through innovative blockchain solutions.
+              </p>
+              <div className="flex space-x-4">
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                  <Twitter className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                  <Github className="w-5 h-5" />
+                </Button>
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                  <Linkedin className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              <div className="space-y-2">
+                <button
+                  onClick={() => scrollToSection("hero")}
+                  className="block text-slate-300 hover:text-white transition-colors"
+                >
+                  Home
+                </button>
+                <button
+                  onClick={() => scrollToSection("media")}
+                  className="block text-slate-300 hover:text-white transition-colors"
+                >
+                  Media
+                </button>
+                <button
+                  onClick={() => scrollToSection("team")}
+                  className="block text-slate-300 hover:text-white transition-colors"
+                >
+                  Team
+                </button>
+                <button
+                  onClick={() => setIsConstructionMode(true)}
+                  className="block text-slate-300 hover:text-white transition-colors"
+                >
+                  Whitepaper
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contact</h3>
+              <div className="space-y-2">
+                <Link
+                  href="mailto:team@defichain.com"
+                  className="flex items-center text-slate-300 hover:text-white transition-colors"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  team@defichain.com
+                </Link>
+                <div className="flex items-center text-slate-300">
+                  <Globe className="w-4 h-4 mr-2" />
+                  Singapore & San Francisco
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-700 mt-8 pt-8 text-center text-slate-400">
+            <p>&copy; 2025 DeFiChain Protocol. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
