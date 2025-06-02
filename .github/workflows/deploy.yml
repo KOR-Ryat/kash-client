@@ -53,6 +53,10 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.manager }} run build
+
+      - name: Create CNAME file
+        run: echo "your-custom-domain.com" > ./out/CNAME docs.kash-rwa.io
+
       - name: Create .nojekyll file
         run: touch ./out/.nojekyll
 

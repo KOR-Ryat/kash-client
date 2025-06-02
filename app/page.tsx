@@ -17,14 +17,63 @@ import {
   Twitter,
   Github,
   Linkedin,
+  MessageCircle,
+  Shield,
+  Zap,
+  Users,
+  TrendingUp,
+  Lock,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
+// ===== CONFIGURATION SECTION - EASY TO MODIFY =====
+const NAVIGATION_LINKS = {
+  WHITEPAPER_URL: "/whitepaper.pdf", // Change this to your actual whitepaper URL
+  LAUNCH_APP_URL: "https://app.defichain.com", // Change this to your actual app URL
+}
+
+const QUICK_LINKS = [
+  {
+    name: "Discord",
+    url: "https://discord.gg/defichain",
+    icon: MessageCircle,
+  },
+  {
+    name: "Twitter",
+    url: "https://twitter.com/defichain",
+    icon: Twitter,
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/defichain",
+    icon: Github,
+  },
+  {
+    name: "Telegram",
+    url: "https://t.me/defichain",
+    icon: MessageCircle,
+  },
+]
+// ===== END CONFIGURATION SECTION =====
+
 export default function BlockchainWebsite() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0)
-  const [isConstructionMode, setIsConstructionMode] = useState(false)
+  const [isPreviewMode, setIsPreviewMode] = useState(false)
+
+  // Check for preview mode on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const preview = urlParams.get("preview")
+
+    if (preview === "true") {
+      setIsPreviewMode(true)
+    } else {
+      // Construction mode by default - redirect to whitepaper
+      window.location.href = NAVIGATION_LINKS.WHITEPAPER_URL
+    }
+  }, [])
 
   // Sample news articles - Replace with your actual news
   const newsArticles = [
@@ -103,13 +152,6 @@ export default function BlockchainWebsite() {
     { name: "Alchemy", logo: "/placeholder.svg?height=80&width=120", url: "https://alchemy.com" },
   ]
 
-  // Construction mode redirect
-  useEffect(() => {
-    if (isConstructionMode) {
-      window.open("/whitepaper.pdf", "_blank")
-    }
-  }, [isConstructionMode])
-
   // Auto-advance news carousel
   useEffect(() => {
     const timer = setInterval(() => {
@@ -131,17 +173,27 @@ export default function BlockchainWebsite() {
     setCurrentNewsIndex((prev) => (prev - 1 + newsArticles.length) % newsArticles.length)
   }
 
+  // Don't render content if not in preview mode
+  if (!isPreviewMode) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-xl">Redirecting to whitepaper...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-      {/* Construction Mode Banner */}
-      {isConstructionMode && (
-        <div className="bg-yellow-600 text-black p-2 text-center">
-          <span className="font-semibold">🚧 Site under construction - Redirecting to whitepaper...</span>
-        </div>
-      )}
+      {/* Preview Mode Banner */}
+      <div className="bg-blue-600 text-white p-2 text-center">
+        <span className="font-semibold">👀 Preview Mode - Add ?preview=true to URL to access this content</span>
+      </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 z-50">
+      <nav className="fixed top-8 w-full bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2">
@@ -155,6 +207,9 @@ export default function BlockchainWebsite() {
             <div className="hidden md:flex items-center space-x-8">
               <button onClick={() => scrollToSection("hero")} className="hover:text-blue-400 transition-colors">
                 Home
+              </button>
+              <button onClick={() => scrollToSection("about")} className="hover:text-blue-400 transition-colors">
+                About
               </button>
               <button onClick={() => scrollToSection("media")} className="hover:text-blue-400 transition-colors">
                 Media
@@ -175,16 +230,16 @@ export default function BlockchainWebsite() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setIsConstructionMode(true)}
-                className="border-slate-600 text-white hover:bg-slate-800"
+                onClick={() => window.open(NAVIGATION_LINKS.WHITEPAPER_URL, "_blank")}
+                className="border-slate-500 text-slate-200 bg-slate-800/50 hover:bg-slate-700 hover:text-white hover:border-slate-400 transition-all duration-200"
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Whitepaper
               </Button>
               <Button
                 size="sm"
-                onClick={() => setIsConstructionMode(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                onClick={() => window.open(NAVIGATION_LINKS.LAUNCH_APP_URL, "_blank")}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
               >
                 <Rocket className="w-4 h-4 mr-2" />
                 Launch App
@@ -203,6 +258,9 @@ export default function BlockchainWebsite() {
               <div className="px-2 pt-2 pb-3 space-y-1">
                 <button onClick={() => scrollToSection("hero")} className="block px-3 py-2 hover:bg-slate-700 rounded">
                   Home
+                </button>
+                <button onClick={() => scrollToSection("about")} className="block px-3 py-2 hover:bg-slate-700 rounded">
+                  About
                 </button>
                 <button onClick={() => scrollToSection("media")} className="block px-3 py-2 hover:bg-slate-700 rounded">
                   Media
@@ -226,16 +284,16 @@ export default function BlockchainWebsite() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setIsConstructionMode(true)}
-                    className="w-full border-slate-600 text-white hover:bg-slate-800"
+                    onClick={() => window.open(NAVIGATION_LINKS.WHITEPAPER_URL, "_blank")}
+                    className="w-full border-slate-500 text-slate-200 bg-slate-800/50 hover:bg-slate-700 hover:text-white hover:border-slate-400"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Whitepaper
                   </Button>
                   <Button
                     size="sm"
-                    onClick={() => setIsConstructionMode(true)}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                    onClick={() => window.open(NAVIGATION_LINKS.LAUNCH_APP_URL, "_blank")}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium"
                   >
                     <Rocket className="w-4 h-4 mr-2" />
                     Launch App
@@ -248,7 +306,7 @@ export default function BlockchainWebsite() {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="pt-16 min-h-screen flex items-center">
+      <section id="hero" className="pt-24 min-h-screen flex items-center">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-500/30">
@@ -264,8 +322,8 @@ export default function BlockchainWebsite() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                onClick={() => setIsConstructionMode(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-lg px-8 py-3"
+                onClick={() => window.open(NAVIGATION_LINKS.LAUNCH_APP_URL, "_blank")}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium text-lg px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
               >
                 <Rocket className="w-5 h-5 mr-2" />
                 Launch Platform
@@ -273,11 +331,125 @@ export default function BlockchainWebsite() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => scrollToSection("media")}
-                className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-3"
+                onClick={() => scrollToSection("about")}
+                className="border-slate-500 text-slate-200 bg-slate-800/50 hover:bg-slate-700 hover:text-white hover:border-slate-400 text-lg px-8 py-3 transition-all duration-200"
               >
                 Learn More
               </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-20 bg-slate-800/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">About DeFiChain</h2>
+            <p className="text-slate-300 text-lg max-w-3xl mx-auto">
+              DeFiChain is revolutionizing decentralized finance by providing a secure, scalable, and user-friendly
+              platform for cross-chain asset management and yield optimization.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <Card className="bg-slate-800 border-slate-700 hover:border-blue-500/50 transition-colors">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Security First</h3>
+                <p className="text-slate-300">
+                  Multi-layer security architecture with formal verification and comprehensive audits by leading
+                  security firms.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800 border-slate-700 hover:border-blue-500/50 transition-colors">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Lightning Fast</h3>
+                <p className="text-slate-300">
+                  Sub-second transaction finality with minimal gas fees through our innovative consensus mechanism.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800 border-slate-700 hover:border-blue-500/50 transition-colors">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">Community Driven</h3>
+                <p className="text-slate-300">
+                  Governed by our community through a transparent DAO structure with on-chain voting mechanisms.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-3xl font-bold mb-6 text-white">Key Features</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mt-1">
+                    <TrendingUp className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Cross-Chain Yield Farming</h4>
+                    <p className="text-slate-300">
+                      Optimize yields across multiple blockchains with automated rebalancing strategies.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center mt-1">
+                    <Lock className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Secure Asset Bridging</h4>
+                    <p className="text-slate-300">
+                      Transfer assets seamlessly between chains with institutional-grade security.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-1">
+                    <Zap className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Instant Liquidity</h4>
+                    <p className="text-slate-300">
+                      Access deep liquidity pools with minimal slippage and competitive rates.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-slate-800 rounded-lg p-8 border border-slate-700">
+              <h4 className="text-2xl font-bold mb-4 text-white">Protocol Stats</h4>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <div className="text-3xl font-bold text-blue-400 mb-1">$2.5B+</div>
+                  <div className="text-slate-300">Total Value Locked</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-purple-400 mb-1">150K+</div>
+                  <div className="text-slate-300">Active Users</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-green-400 mb-1">15+</div>
+                  <div className="text-slate-300">Supported Chains</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-pink-400 mb-1">99.9%</div>
+                  <div className="text-slate-300">Uptime</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -316,7 +488,7 @@ export default function BlockchainWebsite() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-slate-600 text-white hover:bg-slate-700"
+                      className="border-slate-500 text-slate-200 bg-slate-800/50 hover:bg-slate-700 hover:text-white hover:border-slate-400 transition-all duration-200"
                       onClick={() => window.open(newsArticles[currentNewsIndex].link, "_blank")}
                     >
                       Read Full Article
@@ -385,7 +557,7 @@ export default function BlockchainWebsite() {
                         variant="ghost"
                         size="sm"
                         onClick={() => window.open(member.linkedin, "_blank")}
-                        className="text-slate-400 hover:text-blue-400"
+                        className="text-slate-400 hover:text-blue-400 hover:bg-slate-700/50 transition-all duration-200"
                       >
                         <Linkedin className="w-4 h-4" />
                       </Button>
@@ -395,7 +567,7 @@ export default function BlockchainWebsite() {
                         variant="ghost"
                         size="sm"
                         onClick={() => window.open(member.twitter, "_blank")}
-                        className="text-slate-400 hover:text-blue-400"
+                        className="text-slate-400 hover:text-blue-400 hover:bg-slate-700/50 transition-all duration-200"
                       >
                         <Twitter className="w-4 h-4" />
                       </Button>
@@ -447,15 +619,20 @@ export default function BlockchainWebsite() {
                 Building the future of decentralized finance through innovative blockchain solutions.
               </p>
               <div className="flex space-x-4">
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  <Twitter className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  <Github className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  <Linkedin className="w-5 h-5" />
-                </Button>
+                {QUICK_LINKS.map((link, index) => {
+                  const IconComponent = link.icon
+                  return (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => window.open(link.url, "_blank")}
+                      className="text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200"
+                    >
+                      <IconComponent className="w-5 h-5" />
+                    </Button>
+                  )
+                })}
               </div>
             </div>
 
@@ -469,19 +646,19 @@ export default function BlockchainWebsite() {
                   Home
                 </button>
                 <button
+                  onClick={() => scrollToSection("about")}
+                  className="block text-slate-300 hover:text-white transition-colors"
+                >
+                  About
+                </button>
+                <button
                   onClick={() => scrollToSection("media")}
                   className="block text-slate-300 hover:text-white transition-colors"
                 >
                   Media
                 </button>
                 <button
-                  onClick={() => scrollToSection("team")}
-                  className="block text-slate-300 hover:text-white transition-colors"
-                >
-                  Team
-                </button>
-                <button
-                  onClick={() => setIsConstructionMode(true)}
+                  onClick={() => window.open(NAVIGATION_LINKS.WHITEPAPER_URL, "_blank")}
                   className="block text-slate-300 hover:text-white transition-colors"
                 >
                   Whitepaper
