@@ -1,0 +1,16 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: 'export',
+
+  images: {
+    unoptimized: true,
+  },
+
+  basePath: '/KOR-Ryat',
+  assetPrefix: '/kash-client/',
+
+  trailingSlash: true,
+};
+
+export default nextConfig;
